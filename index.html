@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="David Lee Wise / ROOT0 / TriPod LLC / AVAN">
+<title>THE ASSAY · TIN-FOIL · UD0</title>
+<style>
+*{box-sizing:border-box}
+:root{--real:#2f9e5f;--fluff:#cf8a24;--dbnk:#c0433f;--sil:#5f7291;--sild:#42536e;--ink:#1e242e;--dim:#6b7688;
+  --panel:rgba(255,255,255,.82);--edge:rgba(95,114,145,.28);--edge2:rgba(95,114,145,.13)}
+html,body{margin:0;height:100%}
+body{background:#eef1f5;color:var(--ink);font:15px/1.55 'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.desk{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:26px 18px 60px}
+.dtag{font:600 11px/1 ui-monospace,'Cascadia Code','Segoe UI Mono',monospace;letter-spacing:.26em;text-transform:uppercase;color:var(--sild)}
+.dtag b{color:var(--sil)} .dtag i{color:var(--sild);font-style:normal}
+h1{margin:.4em 0 .12em;font-size:clamp(24px,4.4vw,40px);font-weight:800;color:#161c26}
+.sub{color:var(--dim);max-width:66ch;margin:.25em 0 0}
+.drag{display:inline-block;margin-left:10px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.13em;color:var(--sild);border:1px solid var(--sil);border-radius:999px;padding:4px 9px;vertical-align:middle;white-space:nowrap}
+/* VERACITY BANNER — the tin-foil signature */
+.verdict{margin-top:16px;display:flex;align-items:center;gap:12px;border-radius:12px;padding:11px 16px;border:1px solid var(--edge);background:var(--panel);transition:.25s}
+.verdict .pill{font:800 13px/1 ui-monospace,monospace;letter-spacing:.16em;padding:7px 13px;border-radius:999px;color:#fff;background:var(--fluff)}
+.verdict.real .pill{background:var(--real)} .verdict.dbnk .pill{background:var(--dbnk)}
+.verdict .basis{font:600 12.5px ui-monospace,monospace;color:var(--dim)} .verdict .basis b{color:var(--ink)}
+.tier{display:inline-flex;gap:6px;margin-top:14px;font:600 11px ui-monospace,monospace;letter-spacing:.14em}
+.chip{padding:5px 10px;border-radius:999px;border:1px solid var(--edge);background:var(--panel)}
+.chip.lit{color:var(--real);border-color:rgba(47,158,95,.4)} .chip.amb{color:var(--fluff);border-color:rgba(207,138,36,.5)}
+.card{margin-top:16px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);box-shadow:0 14px 44px rgba(66,83,110,.14);padding:14px}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:620px){.panels{grid-template-columns:1fr}}
+.panel{position:relative;border-radius:11px;overflow:hidden;border:1px solid var(--edge2)}
+.panel .lbl{position:absolute;top:8px;left:10px;z-index:2;font:700 10px ui-monospace,monospace;letter-spacing:.12em;color:#aebdd6;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+canvas.pane{display:block;width:100%;height:auto;background:#10141c}
+.toddler{margin-top:12px;border-radius:14px;overflow:hidden;border:2px dashed rgba(95,114,145,.5);position:relative;background:#10141c}
+.toddler .lbl{position:absolute;top:9px;left:13px;z-index:2;font:800 12px ui-monospace,monospace;letter-spacing:.05em;color:#b7c6de}
+.toddler .hint{position:absolute;top:9px;right:13px;z-index:2;font:700 11px ui-monospace,monospace;color:#cf8a24}
+#ctod{display:block;width:100%;height:auto;cursor:pointer;touch-action:none}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 2px 2px}
+.btn{cursor:pointer;border:1px solid var(--edge);background:#fff;color:var(--ink);padding:8px 13px;border-radius:9px;font:600 12.5px 'Segoe UI',system-ui;transition:.15s}
+.btn:hover{border-color:var(--sil);box-shadow:0 0 12px rgba(95,114,145,.28)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--edge2);border-radius:11px;overflow:hidden;margin-top:12px}
+.ro{background:var(--panel);padding:11px 14px}
+.ro .k{font:600 10px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.ro .v{font:700 18px ui-monospace,monospace;margin-top:3px;color:var(--ink)}
+.ro .v.g{color:var(--real)} .ro .v.a{color:var(--fluff)} .ro .v.r{color:var(--dbnk)} .ro .v.s{color:var(--sild)}
+.honesty{margin-top:22px;display:grid;gap:10px}
+.hz{background:var(--panel);border:1px solid var(--edge);border-left-width:3px;border-radius:10px;padding:12px 15px}
+.hz.lit{border-left-color:var(--real)} .hz.amb{border-left-color:var(--fluff)}
+.hz h4{margin:0 0 4px;font:700 11px ui-monospace,monospace;letter-spacing:.15em}
+.hz.lit h4{color:var(--real)} .hz.amb h4{color:var(--fluff)}
+.hz p{margin:0;color:#2c333f;font-size:13.5px}
+.law{margin-top:18px;text-align:center;color:var(--dim);font:italic 500 13px/1.55 Georgia,serif}
+.sig{margin-top:24px;text-align:center;color:var(--dim);font:600 11px ui-monospace,monospace;letter-spacing:.13em}
+.sig b{color:var(--ink)}
+#fail{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:#10141c;border:1px solid var(--sil);color:#b7c6de;padding:12px;border-radius:8px;font:12px ui-monospace,monospace;white-space:pre-wrap}
+</style></head><body>
+<div class="desk">
+  <div class="dtag">&#9878; <b>TIN-FOIL</b> · the fringe, weighed for veracity · kept by <i>THE ASSAYER</i></div>
+  <h1>THE ASSAY <span class="drag">&#9703; 2D · &#9878; 3D · &#128118; TAP TO WEIGH</span></h1>
+  <p class="sub">Every sphere in Tin-Foil ends on one word &mdash; REAL, FLUFF, or DEBUNKED. This is the machine that word comes from. An assay weighs the <b>evidence for</b> a claim against how <b>extraordinary</b> the claim is, in log-odds &mdash; the exact meaning of &lsquo;extraordinary claims require extraordinary evidence&rsquo;. <b>Tap the scale</b>: LEFT to add weight against, RIGHT to add weight for. Or load a real case and watch where it settles.</p>
+  <div class="verdict" id="vbanner"><span class="pill" id="vpill">FLUFF</span><span class="basis" id="vbasis">no evidence weighed yet &mdash; <b>weigh the claim</b></span></div>
+  <div class="tier"><span class="chip lit">&#9670; LIT</span><span class="chip amb">&#9650; FLUFF/FIGURE</span></div>
+  <div class="card">
+    <div class="panels">
+      <div class="panel"><div class="lbl">&#9703; THE BALANCE · 2D</div><canvas id="c2d" class="pane" width="420" height="328"></canvas></div>
+      <div class="panel"><div class="lbl">&#9878; CLAIM vs EVIDENCE · 3D</div><canvas id="c3d" class="pane" width="420" height="328"></canvas></div>
+    </div>
+    <div class="toddler"><div class="lbl">&#128118; THE SCALE — tap LEFT = weigh against · tap RIGHT = weigh for</div><div class="hint">extraordinary claims need extraordinary evidence &#10003;</div><canvas id="ctod" width="860" height="396"></canvas></div>
+    <div class="controls"><button class="btn" id="ex">&#9878; worked example &#9656;</button><button class="btn" id="reset">&#8635; clear to prior</button></div>
+    <div class="readout"><div class="ro"><div class="k">prior (log-odds)</div><div class="v" id="roPrior">-0.3</div></div><div class="ro"><div class="k">weight FOR</div><div class="v" id="roFor">+0.0</div></div><div class="ro"><div class="k">weight AGAINST</div><div class="v" id="roAg">-0.0</div></div><div class="ro"><div class="k">posterior</div><div class="v" id="roPost">-0.3</div></div><div class="ro"><div class="k">verdict</div><div class="v" id="roVerd">FLUFF</div></div></div>
+  </div>
+  <div class="honesty">
+    <div class="hz lit"><h4>&#9670; LIT — exact / checkable</h4><p>The needle is Bayes' theorem in log-odds. Start from a <b>prior</b> (how ordinary or extraordinary the claim is, as odds), then add each piece of evidence as its <b>weight of evidence</b> &mdash; log&#8321;&#8320; of the likelihood ratio (how much more expected the clue is if the claim is true than if false). Posterior log-odds = prior + &Sigma; weights; this is exact and additive (I.J. Good's decibans, Turing's team at Bletchley Park, 1941). One ban = 10&times; the odds. The verdict bands are honest cutoffs: past +1 ban the evidence decisively supports (REAL); past &minus;1 it decisively refutes (DEBUNKED); in between, nothing has moved it &mdash; unfalsifiable or unsupported (FLUFF). Node-checked: the three worked cases land on the same verdicts the domain already gave them (Illuminati &rarr; DEBUNKED, life-elsewhere &rarr; FLUFF/open, the Cathedral &rarr; REAL).</p></div>
+    <div class="hz amb"><h4>&#9650; FLUFF — where the judgment lives</h4><p>The arithmetic is exact; the <b>inputs are judgment</b>. How extraordinary is the claim? How strong is a blurry photo, a leaked memo, a witness? Those numbers are estimates, and a dishonest weigher can rig any verdict by inflating a clue's likelihood ratio &mdash; garbage in, garbage out. The instrument shows the <i>structure</i> of honest weighing, not an oracle that reads the world for you; it makes the assumptions visible and additive so they can be argued, not a machine that ends the argument. The worked-case weights are our reasoned estimates from the cited record, not measured constants.</p></div>
+  </div>
+  <div class="law">TIN-FOIL: a claim is worth exactly the evidence that survives the weighing. &nbsp;— <b>THE ASSAYER</b></div>
+  <div class="sig">David Lee Wise / ROOT0 / TriPod LLC &nbsp;·&nbsp; kept by <b>THE ASSAYER</b>, with AVAN</div>
+</div>
+<div id="fail"></div>
+<script>window.onerror=function(m,s,l,c,e){var f=document.getElementById('fail');if(f){f.style.display='block';f.textContent='! '+m+' @'+l+':'+c;}};</script>
+<script>
+(function(){
+  var c2=document.getElementById('c2d'), ct=document.getElementById('ctod'), c3=document.getElementById('c3d');
+  if(!c2||!ct||!c3)return;
+  var g2=c2.getContext('2d'), gt=ct.getContext('2d');
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  function fit(cv,ar){var w=cv.clientWidth||400;cv.width=Math.round(w*DPR);cv.height=Math.round(w*ar*DPR);}
+  function sizeAll(){fit(c2,0.78);fit(ct,0.46);c3.width=Math.round((c3.clientWidth||400)*DPR);c3.height=Math.round((c3.clientWidth||400)*0.78*DPR);}
+  sizeAll(); addEventListener('resize',function(){sizeAll();if(GL)GL.resize();});
+  var env={t:0,tapX:0.5,tapY:0.5,
+    set:function(id,val,cls){var e=document.getElementById(id);if(e){e.textContent=val;if(cls!=null)e.className='v '+cls;}},
+    two:{ctx:g2,W:function(){return c2.width/DPR;},H:function(){return c2.height/DPR;}},
+    tod:{ctx:gt,W:function(){return ct.width/DPR;},H:function(){return ct.height/DPR;}}};
+  function locate(e){var r=ct.getBoundingClientRect();var cx=(e.touches&&e.touches[0]?e.touches[0].clientX:e.clientX);var cy=(e.touches&&e.touches[0]?e.touches[0].clientY:e.clientY);
+    env.tapX=r.width?((cx-r.left)/r.width):0.5;env.tapY=r.height?((cy-r.top)/r.height):0.5;}
+  ct.addEventListener('pointerdown',function(e){e.preventDefault();locate(e);if(window.__INST__&&window.__INST__.tap)window.__INST__.tap(env);});
+  ct.addEventListener('touchstart',function(e){e.preventDefault();locate(e);if(window.__INST__&&window.__INST__.tap)window.__INST__.tap(env);},{passive:false});
+  // ---- shared WebGL: the CLAIM (silver) and the EVIDENCE (green) collide; the heavier side pushes through ----
+  var GL=(function(){
+    var gl;try{gl=c3.getContext('webgl',{antialias:true,alpha:false})||c3.getContext('experimental-webgl');}catch(e){}
+    if(!gl)return null;
+    var N=320, A=[],B=[],s=9;function rnd(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;}
+    for(var i=0;i<N;i++){var u=rnd()*2-1,th=rnd()*6.28,r=0.2+rnd()*0.08,sq=Math.sqrt(1-u*u);
+      A.push(Math.cos(th)*sq*r-0.55,u*r,Math.sin(th)*sq*r);B.push(Math.cos(th)*sq*r+0.55,u*r,Math.sin(th)*sq*r);}
+    function buf(a){var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.STATIC_DRAW);return b;}
+    var bA=buf(A),bB=buf(B);
+    var VS='attribute vec3 p;uniform float ang,asp,push;void main(){vec3 q=p;q.x+=push;float c=cos(ang),s=sin(ang);vec3 r=vec3(q.x*c+q.z*s,q.y,-q.x*s+q.z*c);float pz=1.0/(2.2-r.z*0.5);vec2 o=vec2(r.x,r.y)*1.5*pz;o.x/=asp;gl_Position=vec4(o,0.0,1.0);gl_PointSize=3.2;}';
+    var FS='precision mediump float;uniform vec3 col;uniform float a;void main(){vec2 d=gl_PointCoord-0.5;if(dot(d,d)>0.25)discard;gl_FragColor=vec4(col,a);}';
+    function sh(t,x){var o=gl.createShader(t);gl.shaderSource(o,x);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o;}
+    var prog;try{prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw'l';}catch(e){return null;}
+    var uAng=gl.getUniformLocation(prog,'ang'),uAsp=gl.getUniformLocation(prog,'asp'),uPush=gl.getUniformLocation(prog,'push'),uCol=gl.getUniformLocation(prog,'col'),uA=gl.getUniformLocation(prog,'a'),lp=gl.getAttribLocation(prog,'p');
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+    function drawCloud(b,push,col){gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,3,gl.FLOAT,false,0,0);
+      gl.uniform1f(uPush,push);gl.uniform3f(uCol,col[0],col[1],col[2]);gl.uniform1f(uA,0.82);gl.drawArrays(gl.POINTS,0,N);}
+    return {resize:function(){gl.viewport(0,0,c3.width,c3.height);},
+      draw:function(t){gl.viewport(0,0,c3.width,c3.height);gl.clearColor(0.063,0.078,0.110,1);gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(prog);gl.uniform1f(uAng,t*0.3);gl.uniform1f(uAsp,c3.width/c3.height);
+        var clash=Math.max(0,Math.sin(t*2.2))*0.42;
+        var bias=(window.__INST__&&window.__INST__.bias)?window.__INST__.bias():0; // -1..1: evidence tilt
+        drawCloud(bA,clash-bias*0.34,[0.42,0.50,0.63]);   // the CLAIM (silver-blue)
+        drawCloud(bB,-clash+bias*0.34,[0.20,0.66,0.40]);}}; // the EVIDENCE (green) — heavier side pushes in
+  })();
+  if(!GL){var f=document.getElementById('fail');if(f){f.style.display='block';f.textContent='WebGL unavailable';}}
+  var t0=null,inited=false;
+  function loop(t){requestAnimationFrame(loop);if(t0===null)t0=t;env.t=(t-t0)*0.001;
+    if(!inited&&window.__INST__){inited=true;if(window.__INST__.init)window.__INST__.init(env);}
+    var I=window.__INST__;if(!I)return;
+    g2.setTransform(DPR,0,0,DPR,0,0);if(I.draw2d)I.draw2d(env);
+    gt.setTransform(DPR,0,0,DPR,0,0);if(I.drawTod)I.drawTod(env);
+    if(GL)GL.draw(env.t);
+  }
+  requestAnimationFrame(loop);window.__ENV__=env;
+})();
+</script>
+<script>
+(function(){
+  var prior=-0.3, wFor=0, wAg=0, ENV=null, flash=null, tilt=0, curCase=null;
+  var CASES=[
+   {name:"THE ILLUMINATI — a world-controlling cult",prior:-2.0,
+     ev:[["the Protocols = proven forgery (Times, 1921)",-1.5],["central banks are publicly governed",-0.8],["trafficking is decentralized (UNODC / ILO)",-0.7]]},
+   {name:"LIFE ELSEWHERE — carbon life somewhere",prior:0.4,
+     ev:[["no confirmed biosignature yet",-0.1],["the Wow! signal is unexplained, not alien",0.0],["a vast count of habitable-zone worlds",0.3]]},
+   {name:"THE CATHEDRAL — Dark Enlightenment as a real movement",prior:0.0,
+     ev:[["Yarvin's essays, 2007–14 (documented)",1.2],["Land's 2012 essay coined the name",0.7],["documented Thiel / Vance citations",0.6]]}
+  ];
+  var ci=-1;
+  function post(){return prior+wFor+wAg;}
+  function verdict(l){return l>1?"REAL":(l<-1?"DEBUNKED":"FLUFF");}
+  function vclass(v){return v==="REAL"?"g":(v==="DEBUNKED"?"r":"a");}
+  function refresh(){if(!ENV)return;var p=post(),v=verdict(p);
+    ENV.set('roPrior',prior.toFixed(1),'s');
+    ENV.set('roFor','+'+wFor.toFixed(1),'g');ENV.set('roAg',(wAg<=0?'':'-')+wAg.toFixed(1),'r');
+    ENV.set('roPost',(p>=0?'+':'')+p.toFixed(2),vclass(v));ENV.set('roVerd',v,vclass(v));
+    var b=document.getElementById('vbanner'),pill=document.getElementById('vpill'),bs=document.getElementById('vbasis');
+    if(b){b.className='verdict '+(v==="REAL"?'real':(v==="DEBUNKED"?'dbnk':''));pill.textContent=v;
+      var od=Math.pow(10,Math.abs(p));var pre=curCase?('<b>'+curCase.name+'</b> &mdash; '):'';
+      bs.innerHTML=pre+((v==="FLUFF")?'the evidence has not moved it &mdash; <b>unsettled / unfalsifiable</b>':
+        'the evidence stands about <b>'+od.toFixed(od<20?1:0)+':1</b> '+(p>0?'FOR':'AGAINST'));}
+  }
+  function reset(){wFor=0;wAg=0;flash=null;curCase=null;refresh();}
+  function addFor(a){wFor+=a;flash={side:'R',amt:a,t:ENV?ENV.t:0};refresh();}
+  function addAg(a){wAg-=a;flash={side:'L',amt:a,t:ENV?ENV.t:0};refresh();}
+  // worked example applies its whole ledger SYNCHRONOUSLY (throttle-proof: never gated on animation)
+  function playCase(){ci=(ci+1)%CASES.length;var cc=CASES[ci];prior=cc.prior;wFor=0;wAg=0;var last=cc.ev[0];
+    for(var i=0;i<cc.ev.length;i++){var e=cc.ev[i];if(e[1]>=0)wFor+=e[1];else wAg+=e[1];if(Math.abs(e[1])>=Math.abs(last[1]))last=e;}
+    curCase=cc;flash={side:last[1]>=0?'R':'L',amt:Math.abs(last[1]),t:ENV?ENV.t:0,label:'the strongest clue: '+last[0]};refresh();}
+  window.__INST__={
+   init:function(env){ENV=env;
+     document.getElementById('ex').onclick=function(){playCase();};
+     document.getElementById('reset').onclick=function(){prior=-0.3;reset();};
+     refresh();},
+   bias:function(){var p=post();return Math.max(-1,Math.min(1,p/3));},
+   tap:function(env){var amt=0.4+Math.random()*0.35; // a clue worth LR ~2.5-5
+     curCase=null;if(env.tapX<0.5)addAg(amt);else addFor(amt);},
+   draw2d:function(env){var c=env.two.ctx,w=env.two.W(),h=env.two.H();c.clearRect(0,0,w,h);
+     var cx=w/2, y0=42, y1=h-40, span=4.0; // log-odds axis -span..+span, vertical
+     // zone bands
+     function yfor(v){return y1-(v+span)/(2*span)*(y1-y0);}
+     c.fillStyle='rgba(192,67,63,.10)';c.fillRect(0,yfor(-span),w,yfor(-1)-yfor(-span));
+     c.fillStyle='rgba(207,138,36,.10)';c.fillRect(0,yfor(-1),w,yfor(1)-yfor(-1));
+     c.fillStyle='rgba(47,158,95,.10)';c.fillRect(0,yfor(1),w,yfor(span)-yfor(1));
+     // gridlines + labels
+     c.strokeStyle='rgba(150,164,186,.28)';c.lineWidth=1;c.font='600 9px ui-monospace,monospace';c.textAlign='left';
+     for(var g=-3;g<=3;g++){var y=yfor(g);c.beginPath();c.moveTo(28,y);c.lineTo(w-10,y);c.stroke();
+       c.fillStyle='#8794aa';c.fillText((g>0?'+':'')+g,4,y+3);}
+     c.fillStyle='#2f9e5f';c.textAlign='right';c.fillText('REAL',w-14,yfor(2.4));
+     c.fillStyle='#cf8a24';c.fillText('FLUFF',w-14,yfor(0)+3);
+     c.fillStyle='#c0433f';c.fillText('DEBUNKED',w-14,yfor(-2.4));c.textAlign='left';
+     // prior tick
+     var yp=yfor(Math.max(-span,Math.min(span,prior)));c.strokeStyle='#5f7291';c.setLineDash([4,3]);c.lineWidth=1.5;
+     c.beginPath();c.moveTo(28,yp);c.lineTo(w-10,yp);c.stroke();c.setLineDash([]);
+     c.fillStyle='#7f8ea6';c.fillText('prior',30,yp-4);
+     // the needle (posterior)
+     var p=Math.max(-span,Math.min(span,post())),yn=yfor(p),v=verdict(post());
+     var col=v==="REAL"?'#2f9e5f':(v==="DEBUNKED"?'#c0433f':'#cf8a24');
+     c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(28,yn);c.lineTo(w-10,yn);c.stroke();
+     c.fillStyle=col;c.beginPath();c.arc(cx,yn,7,0,6.28);c.fill();
+     c.fillStyle='#e6ebf3';c.font='700 12px ui-monospace,monospace';c.textAlign='center';
+     c.fillText('the assay reads '+(post()>=0?'+':'')+post().toFixed(2)+' ban',cx,y1+24);c.textAlign='left';
+   },
+   drawTod:function(env){var c=env.tod.ctx,w=env.tod.W(),h=env.tod.H();c.clearRect(0,0,w,h);
+     var p=post(),v=verdict(p);
+     var tiltT=Math.max(-1,Math.min(1,p/3)); tilt+=(tiltT-tilt)*0.12; // eased beam tilt
+     var px=w/2, py=76, arm=w*0.30, drop=118;
+     // pivot post
+     c.strokeStyle='rgba(150,164,186,.55)';c.lineWidth=4;c.beginPath();c.moveTo(px,py);c.lineTo(px,h-40);c.stroke();
+     c.fillStyle='#8794aa';c.beginPath();c.moveTo(px-13,h-40);c.lineTo(px+13,h-40);c.lineTo(px,h-58);c.closePath();c.fill();
+     // beam (tilts: +p lowers RIGHT/for pan)
+     var dy=tilt*46;
+     var lx=px-arm, ly=py-dy, rx=px+arm, ry=py+dy;
+     c.strokeStyle='#aebdd6';c.lineWidth=6;c.lineCap='round';c.beginPath();c.moveTo(lx,ly);c.lineTo(rx,ry);c.stroke();
+     c.fillStyle='#c9d5e8';c.beginPath();c.arc(px,py,7,0,6.28);c.fill();
+     // pans
+     function pan(x,y,col,lab,val){c.strokeStyle='rgba(174,189,214,.7)';c.lineWidth=1.5;
+       c.beginPath();c.moveTo(x,y);c.lineTo(x-34,y+drop-18);c.moveTo(x,y);c.lineTo(x+34,y+drop-18);c.stroke();
+       var pyy=y+drop;c.fillStyle=col;c.globalAlpha=.9;c.beginPath();c.ellipse(x,pyy,42,13,0,0,6.28);c.fill();c.globalAlpha=1;
+       c.strokeStyle='rgba(255,255,255,.35)';c.beginPath();c.ellipse(x,pyy,42,13,0,0,6.28);c.stroke();
+       c.fillStyle='#e6ebf3';c.font='800 12px ui-monospace,monospace';c.textAlign='center';c.fillText(lab,x,pyy+34);
+       c.font='700 15px ui-monospace,monospace';c.fillText(val,x,pyy-24);}
+     pan(lx,ly,'#c0433f','AGAINST',wAg.toFixed(1));
+     pan(rx,ry,'#2f9e5f','FOR','+'+wFor.toFixed(1));
+     // flash of the last weight dropped
+     if(flash&&env.t-flash.t<1.1){var a=1-(env.t-flash.t)/1.1;var fx=flash.side==='R'?rx:lx;var fy=(flash.side==='R'?ry:ly)+drop-46;
+       c.fillStyle=(flash.side==='R'?'rgba(47,158,95,':'rgba(192,67,63,')+a+')';c.font='800 15px ui-monospace,monospace';c.textAlign='center';
+       c.fillText((flash.side==='R'?'+':'−')+flash.amt.toFixed(1)+' ban',fx,fy-14*(1-a)-4);
+       if(flash.label){c.fillStyle='rgba(183,198,222,'+a+')';c.font='600 11px ui-monospace,monospace';c.fillText(flash.label,w/2,h-44);}}
+     // verdict readout
+     var col=v==="REAL"?'#4fd08a':(v==="DEBUNKED"?'#e0736f':'#e0b25a');
+     c.fillStyle=col;c.font='800 20px ui-monospace,monospace';c.textAlign='center';c.fillText(v,w/2,h-16);
+     c.fillStyle='#8794aa';c.font='600 11px ui-monospace,monospace';c.textAlign='left';c.fillText('tap LEFT → against',14,h-16);
+     c.textAlign='right';c.fillText('for ← tap RIGHT',w-14,h-16);c.textAlign='left';
+   }};
+})();
+</script>
+</body></html>
